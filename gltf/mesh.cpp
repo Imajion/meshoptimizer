@@ -529,7 +529,7 @@ static Stream* getStream(Mesh& mesh, cgltf_attribute_type type, int index = 0)
 	return 0;
 }
 
-static void simplifyMesh(Mesh& mesh, float threshold, bool aggressive)
+static void simplifyMesh(Mesh& mesh, float threshold, bool aggressive, float target_error, float target_error_aggressive)
 {
 	assert(mesh.type == cgltf_primitive_type_triangles);
 
@@ -543,8 +543,6 @@ static void simplifyMesh(Mesh& mesh, float threshold, bool aggressive)
 	size_t vertex_count = mesh.streams[0].data.size();
 
 	size_t target_index_count = size_t(double(mesh.indices.size() / 3) * threshold) * 3;
-	float target_error = 1e-2f;
-	float target_error_aggressive = 1e-1f;
 
 	if (target_index_count < 1)
 		return;
@@ -764,7 +762,7 @@ void processMesh(Mesh& mesh, const Settings& settings)
 		reindexMesh(mesh);
 		filterTriangles(mesh);
 		if (settings.simplify_threshold < 1)
-			simplifyMesh(mesh, settings.simplify_threshold, settings.simplify_aggressive);
+			simplifyMesh(mesh, settings.simplify_threshold, settings.simplify_aggressive, settings.target_error, settings.target_error_aggressive);
 		optimizeMesh(mesh, settings.compressmore);
 		break;
 
@@ -801,7 +799,7 @@ void debugSimplify(const Mesh& source, Mesh& kinds, Mesh& loops, float ratio)
 	meshopt_simplifyDebugLoop = &loop[0];
 	meshopt_simplifyDebugLoopBack = &loopback[0];
 
-	simplifyMesh(mesh, ratio, /* aggressive= */ false);
+	simplifyMesh(mesh, ratio, /* aggressive= */ false, 0.01f, 0.1f);
 
 	meshopt_simplifyDebugKind = 0;
 	meshopt_simplifyDebugLoop = 0;

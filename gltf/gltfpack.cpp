@@ -1122,6 +1122,9 @@ Settings defaults()
 	settings.anim_freq = 30;
 	settings.simplify_threshold = 1.f;
 	settings.texture_scale = 1.f;
+	settings.target_error = 0.01f;
+	settings.target_error_aggressive = 0.1f;
+
 	for (int kind = 0; kind < TextureKind__Count; ++kind)
 		settings.texture_quality[kind] = 8;
 
@@ -1253,6 +1256,14 @@ int main(int argc, char** argv)
 		else if (strcmp(arg, "-si") == 0 && i + 1 < argc && isdigit(argv[i + 1][0]))
 		{
 			settings.simplify_threshold = clamp(float(atof(argv[++i])), 0.f, 1.f);
+		}
+		else if (strcmp(arg, "-te") == 0 && i + 1 < argc && isdigit(argv[i + 1][0]))
+		{
+			settings.target_error = clamp(float(atof(argv[++i])), 0.f, 1.f);
+		}
+		else if (strcmp(arg, "-tea") == 0 && i + 1 < argc && isdigit(argv[i + 1][0]))
+		{
+			settings.target_error_aggressive = clamp(float(atof(argv[++i])), 0.f, 1.f);
 		}
 		else if (strcmp(arg, "-sa") == 0)
 		{
@@ -1437,6 +1448,8 @@ int main(int argc, char** argv)
 			fprintf(stderr, "\t... where C is a comma-separated list (no spaces) with valid values color,normal,attrib\n");
 			fprintf(stderr, "\nSimplification:\n");
 			fprintf(stderr, "\t-si R: simplify meshes targeting triangle count ratio R (default: 1; R should be between 0 and 1)\n");
+			fprintf(stderr, "\t-te R: simplify meshes target error ratio R (default: 0.01; R should be between 0 and 1)\n");
+			fprintf(stderr, "\t-tea R: simplify meshes aggressive target error ratio R (default: 0.1; R should be between 0 and 1)\n");
 			fprintf(stderr, "\t-sa: aggressively simplify to the target ratio disregarding quality\n");
 			fprintf(stderr, "\nVertices:\n");
 			fprintf(stderr, "\t-vp N: use N-bit quantization for positions (default: 14; N should be between 1 and 16)\n");

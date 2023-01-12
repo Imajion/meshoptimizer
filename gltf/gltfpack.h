@@ -151,6 +151,9 @@ struct Settings
 	bool fallback;
 
 	int verbose;
+
+	float target_error;
+	float target_error_aggressive;
 };
 
 struct QuantizationPosition
