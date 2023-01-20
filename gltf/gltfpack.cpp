@@ -353,7 +353,7 @@ static void process(cgltf_data* data, const char* input_path, const char* output
 			mi.textureSetMask |= vi.textureSetMask;
 		}
 
-		filterStreams(mesh, mi);
+		filterStreams(mesh, mi, settings);
 	}
 
 	mergeMeshMaterials(data, meshes, settings);
@@ -1251,6 +1251,10 @@ int main(int argc, char** argv)
 		{
 			settings.keep_extras = true;
 		}
+		else if (strcmp(arg, "-kt") == 0)
+		{
+			settings.keep_texture_set = true;
+		}
 		else if (strcmp(arg, "-mm") == 0)
 		{
 			settings.mesh_merge = true;
@@ -1476,6 +1480,7 @@ int main(int argc, char** argv)
 			fprintf(stderr, "\t-kn: keep named nodes and meshes attached to named nodes so that named nodes can be transformed externally\n");
 			fprintf(stderr, "\t-km: keep named materials and disable named material merging\n");
 			fprintf(stderr, "\t-ke: keep extras data\n");
+			fprintf(stderr, "\t-kt: always keep texture coordinate data\n");
 			fprintf(stderr, "\t-mm: merge instances of the same mesh together when possible\n");
 			fprintf(stderr, "\t-mi: use EXT_mesh_gpu_instancing when serializing multiple mesh instances\n");
 			fprintf(stderr, "\nMiscellaneous:\n");
